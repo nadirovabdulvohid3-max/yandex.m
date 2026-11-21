@@ -1,0 +1,965 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="color-scheme" content="dark">
+<title>Mening musiqam</title>
+<style>
+:root{--bg:#0b0b0f;--bg2:#13131a;--card:#1a1a24;--card2:#222230;--line:#2a2a3a;--tx:#f5f5f8;--tx2:#9b9bb0;--ac:#ffcc1f;--ac2:#ff8a3d;--danger:#ff5468}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--tx);font:15px/1.35 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;overflow:hidden;-webkit-user-select:none;user-select:none}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
+input,textarea{font:inherit;color:inherit;-webkit-user-select:text;user-select:text}
+.ic{width:24px;height:24px;fill:currentColor;display:block;flex:none}
+.hidden{display:none!important}
+#app{height:100vh;height:100dvh;position:relative;display:flex;flex-direction:column;overflow:hidden}
+
+/* ---- login ---- */
+#login{flex:1;display:flex;flex-direction:column;justify-content:center;padding:28px;gap:14px;text-align:center;overflow-y:auto;
+  background:radial-gradient(120% 60% at 50% 0%,rgba(255,138,61,.22),transparent 60%),radial-gradient(90% 50% at 100% 100%,rgba(255,204,31,.12),transparent 60%)}
+.logo{width:84px;height:84px;margin:0 auto 6px;border-radius:26px;background:linear-gradient(135deg,var(--ac),var(--ac2));display:grid;place-items:center;color:#15151d;box-shadow:0 14px 40px rgba(255,160,40,.35)}
+.logo .ic{width:46px;height:46px}
+#login h1{margin:0;font-size:28px;letter-spacing:-.5px}
+#login p{margin:0 auto;color:var(--tx2);max-width:300px}
+.btn{display:block;width:100%;padding:15px 18px;border-radius:14px;font-weight:650;text-align:center}
+.btn.pri{background:linear-gradient(135deg,var(--ac),var(--ac2));color:#17120a}
+.btn.sec{background:var(--card);color:var(--tx)}
+.btn.dng{background:rgba(255,84,104,.14);color:var(--danger)}
+.btn:active{transform:scale(.98)}
+details{background:var(--card);border-radius:14px;padding:12px 14px;text-align:left}
+summary{color:var(--tx2);cursor:pointer;list-style:none}
+summary::-webkit-details-marker{display:none}
+details textarea{width:100%;margin:10px 0;min-height:84px;background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:10px;resize:none}
+.err{color:var(--danger);min-height:20px;font-size:13px}
+
+/* ---- main ---- */
+#main{flex:1;display:flex;flex-direction:column;min-height:0}
+header{display:flex;align-items:center;gap:6px;padding:14px 12px 8px 16px;min-height:60px}
+header h1{flex:1;margin:0;font-size:26px;letter-spacing:-.6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ib{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;color:var(--tx)}
+.ib:active{background:rgba(255,255,255,.1)}
+#view{flex:1;overflow-y:auto;padding:0 12px 14px;-webkit-overflow-scrolling:touch}
+.sbox{display:flex;align-items:center;gap:8px;background:var(--card);border-radius:14px;padding:0 6px 0 14px;height:48px;margin:2px 4px 10px;color:var(--tx2)}
+.sbox input{flex:1;min-width:0;background:none;border:0;outline:0;height:100%;color:var(--tx)}
+.sbox input::-webkit-search-cancel-button{display:none}
+.sbox button{width:36px;height:36px;display:grid;place-items:center;color:var(--tx2)}
+.hint{color:var(--tx2);text-align:center;padding:36px 20px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;padding:4px}
+.chip{background:var(--card);border-radius:999px;padding:8px 14px;color:var(--tx)}
+.sec-t{color:var(--tx2);font-size:13px;margin:10px 6px 4px;text-transform:uppercase;letter-spacing:.8px}
+
+.row{display:grid;grid-template-columns:48px 1fr auto 40px;gap:12px;align-items:center;padding:7px 4px;border-radius:12px}
+.row:active{background:rgba(255,255,255,.06)}
+.row .cv{width:48px;height:48px;border-radius:8px;background:var(--card2) center/cover;position:relative;overflow:hidden}
+.row .meta{min-width:0}
+.row .t{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row .a{color:var(--tx2);font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row .dur{color:var(--tx2);font-size:12px;font-variant-numeric:tabular-nums}
+.row.cur .t{color:var(--ac)}
+.row.off{opacity:.38}
+.like{width:40px;height:40px;display:grid;place-items:center;color:var(--tx2);border-radius:50%}
+.like.on{color:var(--ac)}
+.like:active{transform:scale(.88)}
+.eq{position:absolute;inset:0;background:rgba(0,0,0,.55);display:flex;align-items:flex-end;justify-content:center;gap:3px;padding-bottom:14px}
+.eq i{width:4px;background:var(--ac);border-radius:2px;height:6px;animation:eq 0.9s ease-in-out infinite}
+.eq i:nth-child(2){animation-delay:-.3s}.eq i:nth-child(3){animation-delay:-.6s}
+body.paused .eq i{animation-play-state:paused}
+@keyframes eq{0%,100%{height:5px}50%{height:20px}}
+
+.skrow{height:62px;margin:4px;border-radius:12px;background:linear-gradient(90deg,var(--card) 25%,var(--card2) 50%,var(--card) 75%);background-size:200% 100%;animation:sh 1.2s linear infinite}
+@keyframes sh{to{background-position:-200% 0}}
+.actions{display:flex;gap:10px;padding:2px 4px 10px}
+.actions .btn{padding:12px 14px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;padding:4px}
+.card{text-align:left}
+.card .pc{aspect-ratio:1;border-radius:14px;background:linear-gradient(135deg,var(--card2),var(--card)) center/cover;display:grid;place-items:center;color:var(--tx2);margin-bottom:8px;overflow:hidden}
+.card .pc .ic{width:40px;height:40px;opacity:.6}
+.card b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.card span{color:var(--tx2);font-size:13px}
+.sentinel{height:60px}
+.errbox{background:rgba(255,84,104,.1);border-radius:14px;padding:16px;margin:8px 4px;color:var(--tx);text-align:center}
+.errbox .btn{margin-top:12px;width:auto;display:inline-block;padding:10px 20px}
+
+.hero{display:flex;flex-direction:column;align-items:center;text-align:center;padding:26px 16px 18px;gap:14px}
+.orb{width:170px;height:170px;border-radius:50%;background:radial-gradient(circle at 30% 30%,#fff3b0,var(--ac) 35%,var(--ac2) 70%,#c2410c);box-shadow:0 0 60px rgba(255,138,61,.45),inset 0 -12px 30px rgba(0,0,0,.25);animation:pulse 3.2s ease-in-out infinite}
+.hero.mini .orb{width:84px;height:84px}
+body.paused .orb{animation-play-state:paused}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+.hero p{margin:0;color:var(--tx2);max-width:290px}
+
+#mini{margin:0 8px 6px;background:var(--card2);border-radius:16px;height:64px;display:grid;grid-template-columns:52px 1fr 44px 44px;gap:10px;align-items:center;padding:6px 6px 6px 6px;position:relative;overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,.4)}
+#mini .mc{width:52px;height:52px;border-radius:10px;background:var(--card) center/cover}
+#mini .mt{min-width:0}
+#mini .mt b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:600}
+#mini .mt span{display:block;color:var(--tx2);font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#mbar{position:absolute;left:0;bottom:0;height:3px;width:0;background:var(--ac)}
+nav{display:flex;border-top:1px solid var(--line);background:var(--bg)}
+nav button{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:9px 0 10px;color:var(--tx2);font-size:11px}
+nav button .ic{width:24px;height:24px}
+nav button.on{color:var(--ac)}
+
+/* ---- sheets ---- */
+.sheet{position:fixed;inset:0;z-index:20;background:var(--bg);transform:translateY(102%);transition:transform .32s cubic-bezier(.2,.8,.2,1);display:flex;flex-direction:column;overflow:hidden}
+.sheet.open{transform:none}
+.sheet:not(.open){pointer-events:none}
+#fbg{position:absolute;inset:-40px;background:center/cover;filter:blur(55px) brightness(.45) saturate(1.3);transform:scale(1.2)}
+.fwrap{position:relative;flex:1;display:flex;flex-direction:column;padding:8px 22px 20px;min-height:0}
+.fhead{display:flex;align-items:center;justify-content:space-between}
+.fsub{color:var(--tx2);font-size:12px;text-transform:uppercase;letter-spacing:1px}
+.fmid{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;padding:8px 0}
+.fcover{height:100%;max-height:min(86vw,360px);aspect-ratio:1;max-width:100%;border-radius:18px;background:var(--card2) center/cover;box-shadow:0 24px 60px rgba(0,0,0,.55)}
+.fq{width:100%;height:100%;overflow-y:auto}
+.finfo{display:flex;align-items:center;gap:10px;margin-top:6px}
+.ft{flex:1;min-width:0}
+.ftitle{font-size:22px;font-weight:700;letter-spacing:-.3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fartist{color:var(--tx2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#flike.on,.like.on{color:var(--ac)}
+.seekwrap{margin-top:8px}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:28px;background:transparent;margin:0}
+input[type=range]::-webkit-slider-runnable-track{height:4px;border-radius:2px;background:linear-gradient(to right,var(--ac) var(--p,0%),rgba(255,255,255,.2) var(--p,0%))}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:#fff;margin-top:-5px}
+.times{display:flex;justify-content:space-between;color:var(--tx2);font-size:12px;font-variant-numeric:tabular-nums;margin-top:-2px}
+.ctrl{display:flex;align-items:center;justify-content:space-between;margin-top:10px}
+.ctrl button{width:52px;height:52px;border-radius:50%;display:grid;place-items:center;color:var(--tx2)}
+.ctrl button.on{color:var(--ac)}
+.ctrl #fprev,.ctrl #fnext{color:var(--tx)}
+.ctrl #fprev .ic,.ctrl #fnext .ic{width:34px;height:34px}
+.ctrl .big{width:72px;height:72px;background:#fff;color:#111}
+.ctrl .big .ic{width:38px;height:38px}
+.ctrl .big:active{transform:scale(.95)}
+.fbot{display:flex;justify-content:center;margin-top:12px}
+.pill{background:rgba(255,255,255,.1);border-radius:999px;padding:8px 16px;display:flex;align-items:center;gap:8px;color:var(--tx)}
+.pill .ic{width:18px;height:18px}
+.pill.on{color:var(--ac)}
+.spin{width:22px;height:22px;border-radius:50%;border:3px solid rgba(0,0,0,.2);border-top-color:#111;animation:rot .8s linear infinite}
+@keyframes rot{to{transform:rotate(1turn)}}
+
+#setsheet .sbody{padding:0 16px 24px;overflow-y:auto;display:flex;flex-direction:column;gap:14px}
+.acc{background:var(--card);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:4px}
+.acc b{font-size:18px}
+.badge{display:inline-block;align-self:flex-start;margin-top:6px;font-size:12px;padding:3px 10px;border-radius:999px;background:rgba(255,255,255,.1);color:var(--tx2)}
+.badge.ok{background:rgba(255,204,31,.18);color:var(--ac)}
+.seg{display:flex;background:var(--card);border-radius:14px;padding:4px}
+.seg button{flex:1;padding:11px 8px;border-radius:11px;color:var(--tx2);font-weight:600}
+.seg button.on{background:var(--card2);color:var(--ac)}
+.lbl{color:var(--tx2);font-size:13px;margin:4px 4px -6px}
+#modal{position:fixed;inset:0;z-index:40;background:rgba(0,0,0,.6);display:flex;align-items:flex-end}
+#modal .mbox{width:100%;background:var(--card);border-radius:20px 20px 0 0;padding:10px 10px 18px}
+#modal h3{margin:10px 12px;font-size:15px;color:var(--tx2);font-weight:600}
+#modal button{display:block;width:100%;text-align:left;padding:14px 12px;border-radius:12px;font-size:16px}
+#modal button:active{background:rgba(255,255,255,.08)}
+#toast{position:fixed;left:50%;bottom:150px;transform:translate(-50%,20px);background:#2b2b3b;color:#fff;padding:11px 18px;border-radius:999px;font-size:14px;opacity:0;pointer-events:none;transition:.25s;z-index:60;max-width:86vw;text-align:center}
+#toast.show{opacity:1;transform:translate(-50%,0)}
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="login" class="hidden">
+    <div class="logo" id="logo"></div>
+    <h1>Mening musiqam</h1>
+    <p>Yandex Music hisobingiz bilan kiring. Barcha sevimli treklaringiz shu yerda.</p>
+    <button class="btn pri" data-act="login">Yandex orqali kirish</button>
+    <details>
+      <summary>Kirish ishlamasa: tokenni qo‘lda kiritish</summary>
+      <textarea id="tokin" placeholder="y0_AgAAA... yoki OAuth tokeningizni shu yerga qo‘ying"></textarea>
+      <button class="btn sec" data-act="savetoken">Saqlash va kirish</button>
+    </details>
+    <div class="err" id="loginerr"></div>
+  </div>
+
+  <div id="main" class="hidden">
+    <header>
+      <button class="ib hidden" id="hback" data-act="back"></button>
+      <h1 id="htitle"></h1>
+      <button class="ib" id="hgear" data-act="settings"></button>
+    </header>
+    <div id="view"></div>
+    <div id="mini" class="hidden" data-act="openfull">
+      <div class="mc" id="mcov"></div>
+      <div class="mt"><b id="mtitle"></b><span id="martist"></span></div>
+      <button class="ib" id="mplay" data-act="toggle"></button>
+      <button class="ib" id="mnext" data-act="next"></button>
+      <div id="mbar"></div>
+    </div>
+    <nav id="nav"></nav>
+  </div>
+
+  <div id="full" class="sheet">
+    <div id="fbg"></div>
+    <div class="fwrap">
+      <div class="fhead">
+        <button class="ib" id="fclose" data-act="closefull"></button>
+        <div class="fsub">Hozir ijro etilmoqda</div>
+        <button class="ib" id="fqbtn" data-act="queue"></button>
+      </div>
+      <div class="fmid">
+        <div class="fcover" id="fcover"></div>
+        <div class="fq hidden" id="fq"></div>
+      </div>
+      <div class="finfo">
+        <div class="ft"><div class="ftitle" id="ftitle"></div><div class="fartist" id="fartist"></div></div>
+        <button class="ib" id="flike" data-act="flike"></button>
+      </div>
+      <div class="seekwrap">
+        <input type="range" id="seek" min="0" max="1000" value="0">
+        <div class="times"><span id="tcur">0:00</span><span id="tdur">0:00</span></div>
+      </div>
+      <div class="ctrl">
+        <button id="fshuf" data-act="shuffle"></button>
+        <button id="fprev" data-act="prev"></button>
+        <button id="fplay" class="big" data-act="toggle"></button>
+        <button id="fnext" data-act="next"></button>
+        <button id="frep" data-act="repeat"></button>
+      </div>
+      <div class="fbot"><button class="pill" id="ftimer" data-act="timer"></button></div>
+    </div>
+  </div>
+
+  <div id="setsheet" class="sheet">
+    <header>
+      <button class="ib" data-act="closeset" id="setclose"></button>
+      <h1>Sozlamalar</h1>
+    </header>
+    <div class="sbody" id="setbody"></div>
+  </div>
+
+  <div id="toast"></div>
+</div>
+
+<script>
+'use strict';
+const A = window.Android;
+const $ = s => document.querySelector(s);
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmt = ms => { if (!ms || ms < 0) return '0:00'; const s = Math.floor(ms / 1000); return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0'); };
+
+/* ---------- icons ---------- */
+const I = {
+  play:'M8 5v14l11-7z', pause:'M6 19h4V5H6v14zm8-14v14h4V5h-4z',
+  next:'M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z', prev:'M6 6h2v12H6zm3.5 6l8.5 6V6z',
+  shuffle:'M10.59 9.17L5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.46 20 9.5V4h-5.5zm.33 9.41l-1.41 1.41 3.13 3.13L14.5 20H20v-5.5l-2.04 2.04-3.13-3.13z',
+  repeat:'M7 7h10v3l4-4-4-4v3H5v6h2V7zm10 10H7v-3l-4 4 4 4v-3h12v-6h-2v4z',
+  repeat1:'M7 7h10v3l4-4-4-4v3H5v6h2V7zm10 10H7v-3l-4 4 4 4v-3h12v-6h-2v4zm-4-2V9h-1l-2 1v1h1.5v4H13z',
+  heart:'M16.5 3c-1.74 0-3.41.81-4.5 2.09C10.91 3.81 9.24 3 7.5 3 4.42 3 2 5.42 2 8.5c0 3.78 3.4 6.86 8.55 11.54L12 21.35l1.45-1.32C18.6 15.36 22 12.28 22 8.5 22 5.42 19.58 3 16.5 3zm-4.4 15.55l-.1.1-.1-.1C7.14 14.24 4 11.39 4 8.5 4 6.5 5.5 5 7.5 5c1.54 0 3.04.99 3.57 2.36h1.87C13.46 5.99 14.96 5 16.5 5c2 0 3.5 1.5 3.5 3.5 0 2.89-3.14 5.74-7.9 10.05z',
+  heartf:'M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z',
+  down:'M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z',
+  queue:'M15 6H3v2h12V6zm0 4H3v2h12v-2zM3 16h8v-2H3v2zM17 6v8.18c-.31-.11-.65-.18-1-.18-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3V8h3V6h-5z',
+  search:'M15.5 14h-.79l-.28-.27A6.471 6.471 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z',
+  gear:'M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58a.49.49 0 00.12-.61l-1.92-3.32a.488.488 0 00-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.484.484 0 00-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58a.49.49 0 00-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z',
+  note:'M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z',
+  wave:'M3 9v6h2V9H3zm4-4v14h2V5H7zm4 3v8h2V8h-2zm4-5v18h2V3h-2zm4 6v6h2V9h-2z',
+  moon:'M9.37 5.51c-.18.64-.27 1.31-.27 1.99 0 4.08 3.32 7.4 7.4 7.4.68 0 1.35-.09 1.99-.27C17.45 17.19 14.93 19 12 19c-3.86 0-7-3.14-7-7 0-2.93 1.81-5.45 4.37-6.49zM12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9c0-.46-.04-.92-.1-1.36-.98 1.37-2.58 2.26-4.4 2.26-2.98 0-5.4-2.42-5.4-5.4 0-1.81.89-3.42 2.26-4.4-.44-.06-.9-.1-1.36-.1z',
+  back:'M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z',
+  close:'M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z',
+  list:'M4 10.5c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5 1.5-.67 1.5-1.5-.67-1.5-1.5-1.5zm0-6c-.83 0-1.5.67-1.5 1.5S3.17 7.5 4 7.5 5.5 6.83 5.5 6 4.83 4.5 4 4.5zm0 12c-.83 0-1.5.68-1.5 1.5s.68 1.5 1.5 1.5 1.5-.68 1.5-1.5-.67-1.5-1.5-1.5zM7 19h14v-2H7v2zm0-6h14v-2H7v2zm0-8v2h14V5H7z'
+};
+const ico = (n, c) => '<svg class="ic ' + (c || '') + '" viewBox="0 0 24 24" aria-hidden="true"><path d="' + I[n] + '"/></svg>';
+
+/* ---------- storage / native bridge ---------- */
+const store = {
+  get(k) { try { return A.getPref(k); } catch (e) { return localStorage.getItem(k) || ''; } },
+  set(k, v) { try { A.setPref(k, v); } catch (e) { localStorage.setItem(k, v); } }
+};
+const pending = new Map(); let seq = 0;
+window.__http = (id, status, text) => { const p = pending.get(id); if (p) { pending.delete(id); p(status, text); } };
+function http(method, url, headers, body) {
+  return new Promise((res, rej) => {
+    const id = 'r' + (++seq);
+    const to = setTimeout(() => { pending.delete(id); rej(new Error('Tarmoq javob bermadi')); }, 35000);
+    pending.set(id, (status, text) => {
+      clearTimeout(to);
+      if (status < 0) rej(new Error('Tarmoq xatosi: ' + text)); else res({ status, text });
+    });
+    A.http(id, method, url, JSON.stringify(headers || {}), body || '');
+  });
+}
+
+/* ---------- Yandex Music API ---------- */
+const BASE = 'https://api.music.yandex.net';
+const S = { token: '', uid: '', name: '', plus: false, quality: 'high' };
+const T = new Map();                 // id -> track
+let liked = new Set(), likedIds = [];
+
+function hdrs(extra) {
+  return Object.assign({
+    'Authorization': 'OAuth ' + S.token,
+    'X-Yandex-Music-Client': 'YandexMusicAndroid/24023231',
+    'User-Agent': 'Yandex-Music-API',
+    'Accept': 'application/json'
+  }, extra || {});
+}
+async function api(path, o) {
+  o = o || {};
+  const method = o.method || (o.form ? 'POST' : 'GET');
+  const h = hdrs(Object.assign(o.form ? { 'Content-Type': 'application/x-www-form-urlencoded' } : {}, o.headers || {}));
+  const body = o.form ? new URLSearchParams(o.form).toString() : '';
+  const r = await http(method, BASE + path, h, body);
+  let j = null;
+  try { j = JSON.parse(r.text); } catch (e) { /* not json */ }
+  if (r.status === 401 || r.status === 403) { const e = new Error('Token yaroqsiz yoki muddati tugagan'); e.auth = true; throw e; }
+  if (!j) throw new Error('Server javobi tushunarsiz (' + r.status + ')');
+  if (r.status >= 400 || j.error) {
+    const msg = (j.error && (j.error.message || j.error.name)) || j.errorMessage || ('Xato ' + r.status);
+    const e = new Error(msg);
+    if (j.error && /session|token|auth/i.test(String(j.error.name || ''))) e.auth = true;
+    throw e;
+  }
+  return j.result;
+}
+
+function norm(t) {
+  if (!t) return null;
+  const alb = (t.albums && t.albums[0]) || {};
+  const id = String(t.id != null ? t.id : t.realId);
+  const o = {
+    id, albumId: alb.id,
+    title: (t.title || '—') + (t.version ? ' (' + t.version + ')' : ''),
+    artist: (t.artists || []).map(a => a.name).join(', ') || '—',
+    dur: t.durationMs || 0,
+    cover: t.coverUri || t.ogImage || '',
+    available: t.available !== false
+  };
+  T.set(id, o);
+  return o;
+}
+const coverUrl = (t, size) => (t && t.cover) ? 'https://' + t.cover.replace('%%', size) : '';
+const bgImg = u => u ? "background-image:url('" + u + "')" : '';
+const trackKey = t => t.id + (t.albumId ? ':' + t.albumId : '');
+
+async function fetchTracks(entries) {
+  if (!entries.length) return [];
+  const r = await api('/tracks', { form: { 'track-ids': entries.map(e => e.id + (e.albumId ? ':' + e.albumId : '')).join(',') } });
+  const m = new Map((r || []).map(t => [String(t.id), norm(t)]));
+  return entries.map(e => m.get(e.id)).filter(Boolean);
+}
+
+async function loadLikedIds() {
+  const r = await api('/users/' + S.uid + '/likes/tracks');
+  const arr = ((r && r.library && r.library.tracks) || []).slice();
+  arr.sort((a, b) => String(b.timestamp || '').localeCompare(String(a.timestamp || '')));
+  likedIds = arr.map(x => ({ id: String(x.id), albumId: x.albumId }));
+  liked = new Set(likedIds.map(x => x.id));
+}
+
+async function streamUrl(t) {
+  let err;
+  try { return await classicUrl(t); } catch (e) { err = e; if (e.auth) throw e; }
+  for (const key of ['p93jhgh689SBReK6ghtw62', 'kzqU4XhfCaY6B6JTHODeq5']) {
+    try { return await newUrl(t, key); } catch (e) { /* keyingisiga o‘tamiz */ }
+  }
+  throw err;
+}
+async function classicUrl(t) {
+  const list = await api('/tracks/' + t.id + '/download-info');
+  const mp3 = (list || []).filter(x => x.codec === 'mp3' && !x.preview).sort((a, b) => a.bitrateInKbps - b.bitrateInKbps);
+  if (!mp3.length) throw new Error('Bu trek uchun ijro havolasi yo‘q');
+  const pick = S.quality === 'high' ? mp3[mp3.length - 1] : (mp3.find(x => x.bitrateInKbps >= 128) || mp3[mp3.length - 1]);
+  const u = pick.downloadInfoUrl + (pick.downloadInfoUrl.indexOf('?') >= 0 ? '&' : '?') + 'format=json';
+  const r = await http('GET', u, hdrs());
+  let host, path, ts, s;
+  try { const j = JSON.parse(r.text); host = j.host; path = j.path; ts = j.ts; s = j.s; }
+  catch (e) { const g = n => ((r.text.match(new RegExp('<' + n + '>([^<]*)</' + n + '>')) || [])[1]); host = g('host'); path = g('path'); ts = g('ts'); s = g('s'); }
+  if (!host || !path || !ts || !s) throw new Error('Ijro havolasini olib bo‘lmadi');
+  const sign = A.md5('XGRlBW9FXlekgbPrRHuSiA' + path.slice(1) + s);
+  return 'https://' + host + '/get-mp3/' + sign + '/' + ts + path;
+}
+async function newUrl(t, key) {
+  const ts = Math.floor(Date.now() / 1000), q = S.quality === 'high' ? 'lossless' : 'nq';
+  const codecs = 'flac,aac,he-aac,mp3', tr = 'raw';
+  const sign = A.hmac(key, '' + ts + t.id + q + codecs.replace(/,/g, '') + tr).replace(/=+$/, '');
+  const qs = 'ts=' + ts + '&trackId=' + t.id + '&quality=' + q + '&codecs=' + encodeURIComponent(codecs) + '&transports=' + tr + '&sign=' + encodeURIComponent(sign);
+  const r = await api('/get-file-info?' + qs, { headers: { 'X-Yandex-Music-Client': 'YandexMusicDesktopAppWindows/5.13.2' } });
+  const url = r && r.downloadInfo && r.downloadInfo.url;
+  if (!url) throw new Error('Ijro havolasi yo‘q');
+  return url;
+}
+
+/* ---------- player state ---------- */
+const P = { queue: [], orig: null, index: -1, shuffle: false, repeat: 0, source: null, playing: false, pos: 0, dur: 0, loading: false, fails: 0, seq: 0, prepUntil: 0 };
+let seeking = false, sleepTimer = null, sleepAt = 0;
+const cur = () => P.queue[P.index] || null;
+
+function playQueue(list, i, source) {
+  P.source = source || null;
+  P.orig = list.slice();
+  P.queue = list.slice();
+  P.index = i;
+  if (P.shuffle) reshuffle();
+  P.fails = 0;
+  startCurrent();
+}
+function reshuffle() {
+  const c = P.queue[P.index];
+  const rest = (P.orig || P.queue).filter(t => t !== c);
+  for (let k = rest.length - 1; k > 0; k--) { const j = Math.floor(Math.random() * (k + 1)); const x = rest[k]; rest[k] = rest[j]; rest[j] = x; }
+  P.queue = c ? [c].concat(rest) : rest;
+  P.index = 0;
+}
+function setShuffle(on) {
+  P.shuffle = on;
+  if (P.queue.length) {
+    const c = cur();
+    if (on) { if (!P.orig) P.orig = P.queue.slice(); reshuffle(); }
+    else { P.queue = (P.orig || P.queue).slice(); P.index = Math.max(0, P.queue.indexOf(c)); }
+  }
+  syncPlayer(); renderQueue();
+}
+async function startCurrent() {
+  const t = cur(); if (!t) return;
+  const my = ++P.seq;
+  P.loading = true; P.pos = 0; P.dur = t.dur; syncPlayer();
+  try {
+    const url = await streamUrl(t);
+    if (my !== P.seq) return;
+    P.loading = false; P.fails = 0;
+    P.prepUntil = Date.now() + 8000;
+    A.play(url, t.title, t.artist, coverUrl(t, '400x400'));
+    P.playing = true; syncPlayer();
+    maybePrefetch();
+  } catch (e) {
+    if (my !== P.seq) return;
+    P.loading = false; P.playing = false;
+    if (e.auth) { syncPlayer(); handleAuth(e); return; }
+    P.fails++;
+    toast('Ijro etib bo‘lmadi: ' + e.message);
+    if (P.fails < 3) setTimeout(() => { if (my === P.seq) next(true); }, 700);
+    syncPlayer();
+  }
+}
+async function next(auto) {
+  if (!P.queue.length) return;
+  if (auto && P.repeat === 2) { startCurrent(); return; }
+  const find = from => { let i = from; while (i < P.queue.length && P.queue[i].available === false) i++; return i; };
+  let i = find(P.index + 1);
+  if (i >= P.queue.length && P.source === 'wave') { await moreWave(); i = find(P.index + 1); }
+  if (i >= P.queue.length) {
+    if (P.repeat === 1) { i = find(0); if (i >= P.queue.length) return; }
+    else {
+      if (!auto) { toast('Navbat tugadi'); return; }
+      P.playing = false; P.pos = 0; syncPlayer(); updateProgress(); return;
+    }
+  }
+  P.index = i; startCurrent();
+}
+function prev() {
+  if (!P.queue.length) return;
+  if (P.pos > 3000 || P.index <= 0) { try { A.seek(0); } catch (e) { /* */ } P.pos = 0; updateProgress(); return; }
+  let i = P.index - 1;
+  while (i > 0 && P.queue[i].available === false) i--;
+  P.index = i; startCurrent();
+}
+function toggle() {
+  if (!cur()) return;
+  if (P.loading) return;
+  A.toggle(); P.playing = !P.playing; P.prepUntil = 0; syncPlay();
+}
+window.__player = ev => {
+  if (ev === 'ended') next(true);
+  else if (ev === 'next') next(false);
+  else if (ev === 'prev') prev();
+  else if (ev === 'error') {
+    P.fails++;
+    if (P.fails < 3) next(true); else { P.playing = false; toast('Ijro xatosi'); syncPlayer(); }
+  } else tick();
+};
+function tick() {
+  if (!cur() || P.loading) return;
+  let s; try { s = A.state().split('|'); } catch (e) { return; }
+  P.pos = +s[0] || 0;
+  const d = +s[1]; if (d > 0) P.dur = d;
+  const pl = s[2] === '1';
+  if (pl) P.prepUntil = 0;
+  if (pl !== P.playing && (pl || Date.now() > P.prepUntil)) { P.playing = pl; syncPlay(); }
+  updateProgress();
+}
+setInterval(tick, 500);
+
+/* ---------- player UI ---------- */
+const el = {};
+function bindEls() {
+  ['mini', 'mcov', 'mtitle', 'martist', 'mplay', 'mnext', 'mbar', 'full', 'fbg', 'fcover', 'fq', 'ftitle', 'fartist', 'flike', 'seek', 'tcur', 'tdur', 'fshuf', 'fprev', 'fplay', 'fnext', 'frep', 'ftimer', 'fclose', 'fqbtn', 'view', 'htitle', 'hback', 'hgear', 'nav', 'login', 'main', 'toast', 'modal', 'setsheet', 'setbody', 'setclose', 'logo', 'loginerr', 'tokin']
+    .forEach(id => { el[id] = document.getElementById(id); });
+}
+function initStatic() {
+  el.logo.innerHTML = ico('note');
+  el.hgear.innerHTML = ico('gear'); el.hback.innerHTML = ico('back');
+  el.fclose.innerHTML = ico('down'); el.fqbtn.innerHTML = ico('queue');
+  el.fprev.innerHTML = ico('prev'); el.fnext.innerHTML = ico('next');
+  el.mnext.innerHTML = ico('next');
+  el.setclose.innerHTML = ico('back');
+  const tabs = [['search', 'Qidiruv', 'search'], ['liked', 'Sevimlilar', 'heartf'], ['lists', 'To‘plamlar', 'list'], ['wave', 'To‘lqin', 'wave']];
+  el.nav.innerHTML = tabs.map(t => '<button data-act="tab" data-tab="' + t[0] + '">' + ico(t[2]) + '<span>' + t[1] + '</span></button>').join('');
+}
+function syncPlay() {
+  const busy = P.loading;
+  el.fplay.innerHTML = busy ? '<div class="spin"></div>' : ico(P.playing ? 'pause' : 'play');
+  el.mplay.innerHTML = busy ? '<div class="spin" style="border-color:rgba(255,255,255,.25);border-top-color:#fff"></div>' : ico(P.playing ? 'pause' : 'play');
+  document.body.classList.toggle('paused', !P.playing);
+}
+function syncPlayer() {
+  const t = cur();
+  el.mini.classList.toggle('hidden', !t);
+  if (t) {
+    el.mtitle.textContent = t.title; el.martist.textContent = t.artist;
+    el.mcov.style.cssText = bgImg(coverUrl(t, '200x200'));
+    el.ftitle.textContent = t.title; el.fartist.textContent = t.artist;
+    const big = coverUrl(t, '600x600');
+    el.fcover.style.cssText = bgImg(big); el.fbg.style.cssText = bgImg(big);
+    el.tdur.textContent = fmt(P.dur);
+  }
+  syncPlay(); syncLikes();
+  el.fshuf.innerHTML = ico('shuffle'); el.fshuf.classList.toggle('on', P.shuffle);
+  el.frep.innerHTML = ico(P.repeat === 2 ? 'repeat1' : 'repeat'); el.frep.classList.toggle('on', P.repeat > 0);
+  el.ftimer.innerHTML = ico('moon') + '<span>' + (sleepAt ? 'Taymer: ' + Math.max(1, Math.round((sleepAt - Date.now()) / 60000)) + ' daq' : 'Uyqu taymeri') + '</span>';
+  el.ftimer.classList.toggle('on', !!sleepAt);
+  syncRows(); renderQueue(); updateProgress();
+}
+function syncLikes() {
+  const t = cur();
+  const on = !!(t && liked.has(t.id));
+  el.flike.innerHTML = ico(on ? 'heartf' : 'heart'); el.flike.classList.toggle('on', on);
+  document.querySelectorAll('.like[data-id]').forEach(b => {
+    const o = liked.has(b.dataset.id);
+    b.classList.toggle('on', o); b.innerHTML = ico(o ? 'heartf' : 'heart');
+  });
+}
+function syncRows() {
+  const c = cur();
+  document.querySelectorAll('#view .row').forEach(r => {
+    const is = !!c && r.dataset.id === c.id;
+    r.classList.toggle('cur', is);
+    const cv = r.querySelector('.cv'); const has = cv.querySelector('.eq');
+    if (is && !has) cv.insertAdjacentHTML('beforeend', EQ); else if (!is && has) has.remove();
+  });
+}
+const EQ = '<span class="eq"><i></i><i></i><i></i></span>';
+function updateProgress() {
+  const pct = P.dur > 0 ? Math.min(100, P.pos / P.dur * 100) : 0;
+  el.mbar.style.width = pct + '%';
+  if (!seeking) { el.seek.value = Math.round(pct * 10); el.seek.style.setProperty('--p', pct + '%'); el.tcur.textContent = fmt(P.pos); }
+  el.tdur.textContent = fmt(P.dur);
+}
+function renderQueue() {
+  if (el.fq.classList.contains('hidden')) return;
+  lists.queue = P.queue;
+  el.fq.innerHTML = P.queue.map((t, i) => {
+    const c = i === P.index;
+    return '<div class="row ' + (c ? 'cur' : '') + (t.available === false ? ' off' : '') + '" data-act="qjump" data-i="' + i + '" data-id="' + esc(t.id) + '">' +
+      '<div class="cv" style="' + bgImg(coverUrl(t, '100x100')) + '">' + (c ? EQ : '') + '</div>' +
+      '<div class="meta"><div class="t">' + esc(t.title) + '</div><div class="a">' + esc(t.artist) + '</div></div>' +
+      '<div class="dur">' + fmt(t.dur) + '</div><div></div></div>';
+  }).join('');
+  const c = el.fq.querySelector('.cur'); if (c) c.scrollIntoView({ block: 'center' });
+}
+function toggleQueue() {
+  const hid = el.fq.classList.toggle('hidden');
+  el.fcover.classList.toggle('hidden', !hid);
+  el.fqbtn.classList.toggle('on', !hid);
+  if (!hid) renderQueue();
+}
+function openFull() { if (!cur()) return; el.full.classList.add('open'); }
+function closeFull() { el.full.classList.remove('open'); }
+
+el_seek_init();
+function el_seek_init() {
+  document.addEventListener('DOMContentLoaded', () => {
+    const s = document.getElementById('seek');
+    s.addEventListener('input', () => {
+      seeking = true;
+      const pct = s.value / 10; s.style.setProperty('--p', pct + '%');
+      document.getElementById('tcur').textContent = fmt(P.dur * pct / 100);
+    });
+    s.addEventListener('change', () => {
+      const ms = Math.round(P.dur * s.value / 1000);
+      try { A.seek(ms); } catch (e) { /* */ }
+      P.pos = ms; seeking = false; updateProgress();
+    });
+  });
+}
+
+/* ---------- sleep timer / modal ---------- */
+function showMenu(title, items) {
+  closeMenu();
+  const m = document.createElement('div'); m.id = 'modal';
+  m.innerHTML = '<div class="mbox"><h3>' + esc(title) + '</h3>' + items.map((it, i) => '<button data-mi="' + i + '">' + esc(it.label) + '</button>').join('') + '</div>';
+  m.addEventListener('click', e => {
+    const b = e.target.closest('[data-mi]');
+    if (b) { const it = items[+b.dataset.mi]; closeMenu(); it.fn(); }
+    else if (e.target === m) closeMenu();
+  });
+  document.getElementById('app').appendChild(m);
+}
+function closeMenu() { const m = document.getElementById('modal'); if (m) m.remove(); }
+function setSleep(min) {
+  if (sleepTimer) clearTimeout(sleepTimer);
+  sleepTimer = null; sleepAt = 0;
+  if (min > 0) {
+    sleepAt = Date.now() + min * 60000;
+    sleepTimer = setTimeout(() => { try { A.pause(); } catch (e) { /* */ } P.playing = false; sleepAt = 0; sleepTimer = null; syncPlayer(); toast('Uyqu taymeri: ijro to‘xtatildi'); }, min * 60000);
+    toast('Ijro ' + min + ' daqiqadan keyin to‘xtaydi');
+  }
+  syncPlayer();
+}
+
+/* ---------- toast ---------- */
+let toastT = 0;
+function toast(msg) {
+  el.toast.textContent = msg; el.toast.classList.add('show');
+  clearTimeout(toastT); toastT = setTimeout(() => el.toast.classList.remove('show'), 2600);
+}
+
+/* ---------- likes ---------- */
+async function toggleLike(id) {
+  const t = T.get(id); if (!t) return;
+  const was = liked.has(id);
+  if (was) liked.delete(id); else liked.add(id);
+  syncLikes();
+  try {
+    await api('/users/' + S.uid + '/likes/tracks/' + (was ? 'remove' : 'add-multiple'), { form: { 'track-ids': trackKey(t) } });
+    if (was) {
+      const loaded = LK.tracks.some(x => x.id === id);
+      likedIds = likedIds.filter(x => x.id !== id); LK.tracks = LK.tracks.filter(x => x.id !== id);
+      if (loaded) LK.pos = Math.max(0, LK.pos - 1);
+    }
+    else { likedIds.unshift({ id, albumId: t.albumId }); LK.tracks.unshift(t); LK.pos += 1; }
+    if (tab === 'liked' && !stack.length) render();
+  } catch (e) {
+    if (was) liked.add(id); else liked.delete(id);
+    syncLikes();
+    if (e.auth) handleAuth(e); else toast('Saqlab bo‘lmadi: ' + e.message);
+  }
+}
+
+/* ---------- views ---------- */
+const view = () => el.view;
+const lists = {};
+let tab = 'search', stack = [], io = null;
+const SQ = { q: '', res: null, busy: false, err: '', seq: 0, timer: 0 };
+const LK = { tracks: [], pos: 0, busy: false, err: '' };
+const PL = { list: null, busy: false, err: '', at: 0 };
+const WV = { tracks: [], busy: false, err: '' };
+
+function rowHTML(t, listId, i, src) {
+  const c = cur(); const is = !!c && c.id === t.id; const on = liked.has(t.id);
+  return '<div class="row ' + (is ? 'cur' : '') + (t.available === false ? ' off' : '') + '" data-act="play" data-list="' + listId + '" data-i="' + i + '"' + (src ? ' data-src="' + src + '"' : '') + ' data-id="' + esc(t.id) + '">' +
+    '<div class="cv" style="' + bgImg(coverUrl(t, '100x100')) + '">' + (is ? EQ : '') + '</div>' +
+    '<div class="meta"><div class="t">' + esc(t.title) + '</div><div class="a">' + esc(t.artist) + '</div></div>' +
+    '<div class="dur">' + fmt(t.dur) + '</div>' +
+    '<button class="like ' + (on ? 'on' : '') + '" data-act="like" data-id="' + esc(t.id) + '" aria-label="Sevimli">' + ico(on ? 'heartf' : 'heart') + '</button></div>';
+}
+const skel = n => new Array(n).fill('<div class="skrow"></div>').join('');
+const errBox = (msg, act) => '<div class="errbox">' + esc(msg) + '<br><button class="btn sec" data-act="' + act + '">Qayta urinish</button></div>';
+
+function render() {
+  if (io) { io.disconnect(); io = null; }
+  document.querySelectorAll('#nav button').forEach(b => b.classList.toggle('on', b.dataset.tab === tab && !stack.length));
+  el.hback.classList.toggle('hidden', !stack.length);
+  const top = stack[stack.length - 1];
+  if (top) { el.htitle.textContent = top.title; viewPlaylist(top); return; }
+  el.htitle.textContent = { search: 'Qidiruv', liked: 'Sevimlilar', lists: 'To‘plamlar', wave: 'To‘lqin' }[tab];
+  ({ search: viewSearch, liked: viewLiked, lists: viewLists, wave: viewWave }[tab])();
+}
+function setTab(t) { tab = t; stack = []; el.view.scrollTop = 0; render(); }
+
+/* search */
+function recent() { try { return JSON.parse(store.get('recent') || '[]'); } catch (e) { return []; } }
+function pushRecent(q) { const r = recent().filter(x => x !== q); r.unshift(q); store.set('recent', JSON.stringify(r.slice(0, 8))); }
+function viewSearch() {
+  el.view.innerHTML = '<div class="sbox">' + ico('search') + '<input id="q" type="search" placeholder="Trek yoki ijrochi nomi" enterkeyhint="search" autocomplete="off" autocapitalize="off"><button id="qclr" data-act="qclr" class="' + (SQ.q ? '' : 'hidden') + '">' + ico('close') + '</button></div><div id="sres"></div>';
+  const q = document.getElementById('q'); q.value = SQ.q;
+  q.addEventListener('input', () => {
+    SQ.q = q.value; document.getElementById('qclr').classList.toggle('hidden', !SQ.q);
+    clearTimeout(SQ.timer);
+    if (!SQ.q.trim()) { SQ.res = null; SQ.err = ''; SQ.busy = false; SQ.seq++; searchBody(); return; }
+    SQ.timer = setTimeout(doSearch, 450);
+  });
+  q.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); clearTimeout(SQ.timer); q.blur(); doSearch(); } });
+  searchBody();
+}
+async function doSearch() {
+  const q = SQ.q.trim(); if (!q) return;
+  const my = ++SQ.seq; SQ.busy = true; SQ.err = ''; searchBody();
+  try {
+    const r = await api('/search?text=' + encodeURIComponent(q) + '&nocorrect=false&type=track&page=0&playlist-in-best=true');
+    if (my !== SQ.seq) return;
+    SQ.res = ((r && r.tracks && r.tracks.results) || []).map(norm); SQ.busy = false;
+    pushRecent(q);
+  } catch (e) {
+    if (my !== SQ.seq) return;
+    SQ.busy = false; SQ.err = e.message; if (e.auth) handleAuth(e);
+  }
+  if (tab === 'search' && !stack.length) searchBody();
+}
+function searchBody() {
+  const box = document.getElementById('sres'); if (!box) return;
+  if (SQ.busy) { box.innerHTML = skel(7); return; }
+  if (SQ.err) { box.innerHTML = errBox(SQ.err, 'retrysearch'); return; }
+  if (SQ.res) {
+    lists.search = SQ.res;
+    box.innerHTML = SQ.res.length ? SQ.res.map((t, i) => rowHTML(t, 'search', i)).join('') : '<div class="hint">Hech narsa topilmadi</div>';
+    return;
+  }
+  const r = recent();
+  box.innerHTML = r.length ? '<div class="sec-t">Oxirgi qidiruvlar</div><div class="chips">' + r.map(x => '<button class="chip" data-act="chip" data-q="' + esc(x) + '">' + esc(x) + '</button>').join('') + '</div>' : '<div class="hint">Qidirmoqchi bo‘lgan treklaringizni yozing</div>';
+}
+
+/* liked */
+function viewLiked() {
+  const box = el.view;
+  const n = likedIds.length;
+  let h = '';
+  if (LK.tracks.length) {
+    lists.liked = LK.tracks;
+    h += '<div class="actions"><button class="btn pri" data-act="likedplay">Ijro etish · ' + n + '</button><button class="btn sec" data-act="likedshuf">' + ico('shuffle') + '</button></div>';
+    h += LK.tracks.map((t, i) => rowHTML(t, 'liked', i, 'liked')).join('');
+    if (LK.pos < n) h += '<div class="sentinel" id="sent"></div>';
+  } else if (LK.busy) h += skel(8);
+  else if (LK.err) h += errBox(LK.err, 'retryliked');
+  else if (!n || LK.pos >= n) h += '<div class="hint">Hali sevimli treklar yo‘q.<br>Yurakcha tugmasini bosib qo‘shing.</div>';
+  else h += skel(8);
+  box.innerHTML = h;
+  if (!LK.tracks.length && n && !LK.busy && !LK.err) loadMoreLiked();
+  const s = document.getElementById('sent');
+  if (s) { io = new IntersectionObserver(es => { if (es[0].isIntersecting) loadMoreLiked(); }, { root: el.view, rootMargin: '400px' }); io.observe(s); }
+}
+async function loadMoreLiked() {
+  if (LK.busy || LK.pos >= likedIds.length) return;
+  LK.busy = true; LK.err = '';
+  try {
+    const part = likedIds.slice(LK.pos, LK.pos + 60);
+    const got = await fetchTracks(part);
+    LK.tracks = LK.tracks.concat(got); LK.pos += part.length;
+  } catch (e) { LK.err = e.message; if (e.auth) handleAuth(e); }
+  LK.busy = false;
+  if (tab === 'liked' && !stack.length) { const st = el.view.scrollTop; render(); el.view.scrollTop = st; }
+}
+async function ensureLiked(max) {
+  const want = Math.min(max, likedIds.length);
+  while (LK.tracks.length < want && !LK.err) {
+    if (LK.busy) { await new Promise(r => setTimeout(r, 200)); continue; }
+    await loadMoreLiked();
+  }
+}
+
+/* playlists */
+async function loadLists() {
+  PL.busy = true; PL.err = ''; if (tab === 'lists' && !stack.length) viewLists();
+  try { PL.list = (await api('/users/' + S.uid + '/playlists/list')) || []; PL.at = Date.now(); }
+  catch (e) { PL.err = e.message; if (e.auth) handleAuth(e); }
+  PL.busy = false;
+  if (tab === 'lists' && !stack.length) viewLists();
+}
+function viewLists() {
+  if (PL.list === null && !PL.busy && !PL.err) { loadLists(); return; }
+  if (PL.list && !PL.busy && Date.now() - PL.at > 90000) { loadLists(); }
+  if (PL.busy && !PL.list) { el.view.innerHTML = skel(6); return; }
+  if (PL.err && !PL.list) { el.view.innerHTML = errBox(PL.err, 'retrylists'); return; }
+  const l = PL.list || [];
+  if (!l.length) { el.view.innerHTML = '<div class="hint">Pleylistlar topilmadi</div>'; return; }
+  el.view.innerHTML = '<div class="grid">' + l.map(p => {
+    const c = p.cover || {}; const u = c.uri || (c.itemsUri && c.itemsUri[0]) || p.ogImage || '';
+    const img = u ? "background-image:url('https://" + u.replace('%%', '400x400') + "')" : '';
+    return '<button class="card" data-act="openpl" data-kind="' + esc(p.kind) + '" data-title="' + esc(p.title) + '"><div class="pc" style="' + img + '">' + (u ? '' : ico('list')) + '</div><b>' + esc(p.title) + '</b><span>' + (p.trackCount || 0) + ' ta trek</span></button>';
+  }).join('') + '</div>';
+}
+async function openPlaylist(kind, title) {
+  const ent = { kind, title, tracks: null, err: '' };
+  stack.push(ent); el.view.scrollTop = 0; render();
+  await loadPlaylist(ent);
+}
+async function loadPlaylist(ent) {
+  ent.err = '';
+  try {
+    const r = await api('/users/' + S.uid + '/playlists/' + ent.kind);
+    const items = (r && r.tracks) || [];
+    const missing = items.filter(x => !x.track).map(x => ({ id: String(x.id), albumId: x.albumId }));
+    let got = [];
+    if (missing.length) got = await fetchTracks(missing.slice(0, 200));
+    const byId = new Map(got.map(t => [t.id, t]));
+    ent.tracks = items.map(x => x.track ? norm(x.track) : byId.get(String(x.id))).filter(Boolean);
+  } catch (e) { ent.err = e.message; if (e.auth) handleAuth(e); }
+  if (stack[stack.length - 1] === ent) render();
+}
+function viewPlaylist(ent) {
+  if (ent.err) { el.view.innerHTML = errBox(ent.err, 'retrypl'); return; }
+  if (!ent.tracks) { el.view.innerHTML = skel(8); return; }
+  lists.pl = ent.tracks;
+  el.view.innerHTML = ent.tracks.length
+    ? '<div class="actions"><button class="btn pri" data-act="plplay">Ijro etish · ' + ent.tracks.length + '</button><button class="btn sec" data-act="plshuf">' + ico('shuffle') + '</button></div>' + ent.tracks.map((t, i) => rowHTML(t, 'pl', i, 'pl')).join('')
+    : '<div class="hint">Bu pleylist bo‘sh</div>';
+}
+
+/* wave */
+function viewWave() {
+  if (WV.busy) { el.view.innerHTML = '<div class="hero"><div class="orb"></div><p>To‘lqin tayyorlanmoqda…</p></div>'; return; }
+  if (WV.err) { el.view.innerHTML = errBox(WV.err, 'startwave'); return; }
+  if (!WV.tracks.length) {
+    el.view.innerHTML = '<div class="hero"><div class="orb"></div><p>Sizning didingizga moslab tanlanadigan cheksiz musiqa oqimi.</p><button class="btn pri" data-act="startwave">To‘lqinni boshlash</button></div>';
+    return;
+  }
+  const list = P.source === 'wave' ? P.queue.slice(Math.max(0, P.index)) : WV.tracks;
+  lists.wave = list;
+  el.view.innerHTML = '<div class="hero mini"><div class="orb"></div><button class="btn pri" data-act="startwave">Yangi to‘lqin</button></div><div class="sec-t">Navbatda</div>' + list.map((t, i) => rowHTML(t, 'wave', i, 'wave')).join('');
+}
+async function fetchWave(queue) {
+  const r = await api('/rotor/station/user:onyourwave/tracks?settings2=true' + (queue ? '&queue=' + encodeURIComponent(queue) : ''));
+  return ((r && r.sequence) || []).map(s => s.track).filter(Boolean).map(norm);
+}
+async function startWave() {
+  WV.busy = true; WV.err = ''; if (tab === 'wave' && !stack.length) viewWave();
+  try {
+    const tr = await fetchWave('');
+    if (!tr.length) throw new Error('To‘lqin bo‘sh qaytdi');
+    WV.tracks = tr; WV.busy = false;
+    const sh = P.shuffle; P.shuffle = false;
+    playQueue(tr, 0, 'wave'); P.shuffle = sh;
+  } catch (e) { WV.busy = false; WV.err = e.message; if (e.auth) handleAuth(e); }
+  if (tab === 'wave' && !stack.length) viewWave();
+}
+let waveBusy = false;
+async function moreWave() {
+  if (waveBusy || P.source !== 'wave') return;
+  waveBusy = true;
+  try {
+    const last = P.queue[P.queue.length - 1];
+    const tr = (await fetchWave(last && last.id)).filter(t => !P.queue.some(q => q.id === t.id));
+    P.queue = P.queue.concat(tr); if (P.orig) P.orig = P.orig.concat(tr);
+    WV.tracks = WV.tracks.concat(tr);
+    if (tab === 'wave' && !stack.length) viewWave();
+    renderQueue();
+  } catch (e) { /* keyingi safar */ }
+  waveBusy = false;
+}
+function maybePrefetch() { if (P.source === 'wave' && P.queue.length - P.index <= 3) moreWave(); }
+
+/* ---------- settings / auth ---------- */
+function openSettings() {
+  const q = S.quality;
+  el.setbody.innerHTML =
+    '<div class="acc"><b>' + esc(S.name || 'Yandex hisobi') + '</b><span style="color:var(--tx2)">ID: ' + esc(S.uid) + '</span><span class="badge ' + (S.plus ? 'ok' : '') + '">' + (S.plus ? 'Plus faol' : 'Plus obunasi yo‘q: ba’zi treklar to‘liq ijro etilmasligi mumkin') + '</span></div>' +
+    '<div class="lbl">Ovoz sifati</div><div class="seg"><button data-act="qual" data-q="high" class="' + (q === 'high' ? 'on' : '') + '">Yuqori</button><button data-act="qual" data-q="low" class="' + (q === 'low' ? 'on' : '') + '">Tejamkor</button></div>' +
+    '<button class="btn dng" data-act="logout">Hisobdan chiqish</button>';
+  el.setsheet.classList.add('open');
+}
+function handleAuth(e) { if (e && e.auth) { toast('Seans tugadi, qayta kiring'); logout(true); } }
+function logout(keepMsg) {
+  try { A.stop(); } catch (e) { /* */ }
+  store.set('token', ''); store.set('uid', '');
+  S.token = ''; S.uid = '';
+  P.queue = []; P.orig = null; P.index = -1; P.playing = false; P.seq++; P.loading = false;
+  likedIds = []; liked = new Set(); LK.tracks = []; LK.pos = 0; LK.err = '';
+  PL.list = null; WV.tracks = []; SQ.res = null; SQ.q = ''; stack = [];
+  closeFull(); el.setsheet.classList.remove('open');
+  showLogin(keepMsg ? 'Qaytadan kiring' : '');
+}
+function showLogin(msg) {
+  el.main.classList.add('hidden'); el.login.classList.remove('hidden');
+  el.loginerr.textContent = msg || '';
+}
+async function enter(token) {
+  S.token = token; store.set('token', token);
+  el.loginerr.textContent = 'Kirilmoqda…';
+  try {
+    await initSession();
+    el.loginerr.textContent = '';
+    showMain();
+  } catch (e) {
+    if (e.auth) { S.token = ''; store.set('token', ''); el.loginerr.textContent = 'Token noto‘g‘ri yoki eskirgan'; }
+    else el.loginerr.textContent = e.message;
+  }
+}
+window.__token = tok => { if (tok) enter(tok); else el.loginerr.textContent = 'Kirish bekor qilindi'; };
+async function initSession() {
+  const st = await api('/account/status');
+  const a = (st && st.account) || {};
+  S.uid = String(a.uid); S.name = a.displayName || a.fullName || a.login || '';
+  S.plus = !!(st && st.plus && st.plus.hasPlus);
+  store.set('uid', S.uid);
+  try { await loadLikedIds(); } catch (e) { if (e.auth) throw e; }
+}
+function showMain() {
+  el.login.classList.add('hidden'); el.main.classList.remove('hidden');
+  syncPlayer(); render();
+}
+
+/* ---------- events ---------- */
+const ACT = {
+  login() { try { A.login(); } catch (e) { el.loginerr.textContent = 'Kirish oynasini ochib bo‘lmadi'; } },
+  savetoken() { const v = el.tokin.value.trim().replace(/^OAuth\s+/i, ''); if (v) enter(v); else el.loginerr.textContent = 'Tokenni kiriting'; },
+  tab(b) { setTab(b.dataset.tab); },
+  back() { backNav(); },
+  settings() { openSettings(); },
+  closeset() { el.setsheet.classList.remove('open'); },
+  qual(b) { S.quality = b.dataset.q; store.set('quality', S.quality); openSettings(); },
+  logout() { logout(false); },
+  play(b) {
+    const l = lists[b.dataset.list]; if (!l) return;
+    const i = +b.dataset.i;
+    if (l[i].available === false) { toast('Bu trek hozir mavjud emas'); return; }
+    playQueue(l, i, b.dataset.src || null);
+  },
+  like(b) { toggleLike(b.dataset.id); },
+  qjump(b) { const i = +b.dataset.i; if (P.queue[i] && P.queue[i].available !== false) { P.index = i; startCurrent(); } },
+  openfull() { openFull(); },
+  closefull() { closeFull(); },
+  queue() { toggleQueue(); },
+  flike() { const t = cur(); if (t) toggleLike(t.id); },
+  toggle() { toggle(); },
+  next() { next(false); },
+  prev() { prev(); },
+  shuffle() { setShuffle(!P.shuffle); },
+  repeat() { P.repeat = (P.repeat + 1) % 3; syncPlayer(); },
+  timer() {
+    showMenu('Uyqu taymeri', [{ label: 'O‘chirish', fn: () => setSleep(0) }, { label: '15 daqiqa', fn: () => setSleep(15) }, { label: '30 daqiqa', fn: () => setSleep(30) }, { label: '45 daqiqa', fn: () => setSleep(45) }, { label: '1 soat', fn: () => setSleep(60) }]);
+  },
+  qclr() { SQ.q = ''; SQ.res = null; SQ.err = ''; SQ.seq++; viewSearch(); },
+  chip(b) { SQ.q = b.dataset.q; viewSearch(); doSearch(); },
+  retrysearch() { doSearch(); },
+  retryliked() { LK.err = ''; viewLiked(); },
+  retrylists() { PL.err = ''; loadLists(); },
+  retrypl() { const e = stack[stack.length - 1]; if (e) { e.tracks = null; render(); loadPlaylist(e); } },
+  async likedplay() { await ensureLiked(500); if (LK.tracks.length) playQueue(LK.tracks, 0, 'liked'); },
+  async likedshuf() { await ensureLiked(500); if (!LK.tracks.length) return; P.shuffle = true; const i = Math.floor(Math.random() * LK.tracks.length); playQueue(LK.tracks, i, 'liked'); },
+  plplay() { const e = stack[stack.length - 1]; if (e && e.tracks && e.tracks.length) playQueue(e.tracks, Math.max(0, e.tracks.findIndex(t => t.available !== false)), 'pl'); },
+  plshuf() { const e = stack[stack.length - 1]; if (e && e.tracks && e.tracks.length) { P.shuffle = true; playQueue(e.tracks, Math.floor(Math.random() * e.tracks.length), 'pl'); } },
+  openpl(b) { openPlaylist(b.dataset.kind, b.dataset.title); },
+  startwave() { startWave(); }
+};
+document.addEventListener('click', e => {
+  const b = e.target.closest('[data-act]');
+  if (!b) return;
+  const f = ACT[b.dataset.act];
+  if (f) { e.stopPropagation(); f(b); }
+}, false);
+
+function backNav() {
+  if (stack.length) { stack.pop(); el.view.scrollTop = 0; render(); return true; }
+  return false;
+}
+window.__back = () => {
+  if (document.getElementById('modal')) { closeMenu(); return true; }
+  if (el.setsheet.classList.contains('open')) { el.setsheet.classList.remove('open'); return true; }
+  if (el.full.classList.contains('open')) { closeFull(); return true; }
+  return backNav();
+};
+
+/* ---------- boot ---------- */
+async function boot() {
+  bindEls(); initStatic();
+  S.quality = store.get('quality') || 'high';
+  S.token = store.get('token') || '';
+  if (!S.token) { showLogin(''); return; }
+  S.uid = store.get('uid') || '';
+  try {
+    await initSession(); showMain();
+  } catch (e) {
+    if (e.auth) { S.token = ''; store.set('token', ''); showLogin('Seans tugagan, qayta kiring'); }
+    else if (S.uid) { showMain(); toast('Internet yo‘q yoki server javob bermadi'); }
+    else showLogin(e.message);
+  }
+}
+document.addEventListener('DOMContentLoaded', boot);
+</script>
+</body>
+</html>
