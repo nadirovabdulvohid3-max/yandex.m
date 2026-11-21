@@ -231,14 +231,11 @@ object Player {
 
     private fun requestFocus(ctx: Context) {
         val am = ctx.getSystemService(Context.AUDIO_SERVICE) as AudioManager
-        var r = focusReq
-        if (r == null) {
-            r = AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN)
-                .setAudioAttributes(attrs)
-                .setOnAudioFocusChangeListener(focusListener, main)
-                .build()
-            focusReq = r
-        }
+        val r: AudioFocusRequest = focusReq ?: AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN)
+            .setAudioAttributes(attrs)
+            .setOnAudioFocusChangeListener(focusListener, main)
+            .build()
+        focusReq = r
         am.requestAudioFocus(r)
     }
 
